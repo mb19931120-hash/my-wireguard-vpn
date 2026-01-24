@@ -1,7 +1,7 @@
 FROM linuxserver/wireguard:latest
 
 ENV PUID=1000
-ENG PGID=1000
+ENV PGID=1000
 ENV TZ=Asia/Riyadh
 ENV SERVERURL=auto
 ENV SERVERPORT=51820
