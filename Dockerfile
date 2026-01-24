@@ -1,16 +1,15 @@
-FROM linuxserver/wireguard:latest
+FROM alpine:latest
 
-ENV PUID=1000
-ENV PGID=1000
-ENV TZ=Asia/Riyadh
-ENV SERVERURL=auto
-ENV SERVERPORT=51820
-ENV PEERS=5
-ENV PEERDNS=1.1.1.1
-ENV INTERNAL_SUBNET=10.13.13.0
-ENV ALLOWEDIPS=0.0.0.0/0
+# تثبيت xray
+RUN apk add --no-cache curl
+RUN curl -L https://github.com/XTLS/Xray-core/releases/latest/download/Xray-linux-64.zip -o xray.zip \
+    && unzip xray.zip \
+    && mv xray /usr/local/bin/xray \
+    && chmod +x /usr/local/bin/xray \
+    && rm -rf xray.zip
 
-EXPOSE 51820/udp
-EXPOSE 51821/tcp
+# نسخ الإعدادات
+COPY config.json /etc/xray/config.json
 
-VOLUME /config
+# ريندر يعطي منفذ عشوائي عبر المتغير PORT
+CMD xray -config /etc/xray/config.json
