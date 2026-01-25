@@ -1,0 +1,6 @@
+name = "my-wireguard-vpn"
+main = "worker.js"
+compatibility_date = "2023-10-30"
+
+[vars]
+UUID = "ضع_هنا_رمز_UUID_الخاص_بك"
