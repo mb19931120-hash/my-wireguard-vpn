@@ -1,6 +1,11 @@
 name = "my-wireguard-vpn"
 main = "worker.js"
-compatibility_date = "2024-04-01"
-
+compatibility_date = "2024-01-25"  # تحديث التاريخ
+compatibility_flags = ["nodejs_compat"]  # قد تحتاج هذا
 [vars]
-UUID = "ضع_هنا_الرمز_الخاص_بك"
+UUID = "b9e8a0c7-a0f0-11ed-bdda-0242ac120002"
+
+# أضف هذه الإعدادات الهامة:
+[build.upload]
+format = "modules"  # هذا هام لتنسيق ES Modules
+main = "./worker.js"
