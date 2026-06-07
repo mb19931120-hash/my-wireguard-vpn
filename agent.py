@@ -10,7 +10,6 @@ from cap_protocol import JobRequest, JobResponse, sign_response
 
 load_dotenv()
 
-# Load agent configuration
 AGENT_PRIVATE_KEY = os.getenv("AGENT_PRIVATE_KEY")
 
 
@@ -25,7 +24,6 @@ def process_job(job: JobRequest) -> JobResponse:
     if job.payment_tx_hash:
         paid = verify_payment_by_tx(job.payment_tx_hash)
     else:
-        # If no tx hash provided, wait for any transfer from the registered user
         paid = verify_payment_wait_for_transfer()
 
     if not paid:
@@ -63,7 +61,6 @@ def process_job(job: JobRequest) -> JobResponse:
 
     # Step 3: sign the response (CAP compatibility)
     if AGENT_PRIVATE_KEY:
-        signature = sign_response(response, AGENT_PRIVATE_KEY)
-        response.signature = signature
+        response.signature = sign_response(response, AGENT_PRIVATE_KEY)
 
     return response
