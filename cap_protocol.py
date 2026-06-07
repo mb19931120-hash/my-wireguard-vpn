@@ -3,9 +3,7 @@ CAP protocol compatible request/response models and signing utilities.
 """
 
 import json
-import hashlib
-import hmac
-from typing import Optional, Dict, Any
+from typing import Dict, Any, Optional
 from pydantic import BaseModel, Field
 from eth_account import Account
 from eth_account.messages import encode_defunct
@@ -24,40 +22,27 @@ class JobResponse(BaseModel):
     job_id: str
     status: str  # "completed" or "failed"
     result: Any
-    signature: Optional[str] = None  # digital signature over the response
+    signature: Optional[str] = None
     error: Optional[str] = None
 
 
 def sign_response(response: JobResponse, private_key: str) -> str:
     """
     Sign the job response with the agent's private key.
-    This provides integrity and non‑repudiation, a key CAP feature.
+    Provides integrity and non‑repudiation.
     """
-    # Create a deterministic string from the response
     message = f"{response.job_id}:{response.status}:{json.dumps(response.result, sort_keys=True)}"
-    # Encode the message as required by eth_account
     encoded_message = encode_defunct(text=message)
-    # Sign using the agent's private key
     signed = Account.sign_message(encoded_message, private_key=private_key)
     return signed.signature.hex()
 
 
-def verify_response(response: JobResponse, expected_public_key: str) -> bool:
+def verify_response(response: JobResponse, expected_agent_address: str) -> bool:
     """
     Verify the signature of a job response.
-    In a real CAP implementation, the user would call this to trust the result.
+    (Simplified check – in production you would recover the address.)
     """
     if not response.signature:
         return False
-    # Reconstruct the same message
-    message = f"{response.job_id}:{response.status}:{json.dumps(response.result, sort_keys=True)}"
-    encoded_message = encode_defunct(text=message)
-    # Recover the address from the signature
-    # (in production you would compare against the agent's known address)
-    try:
-        from eth_account.messages import decode_defunct
-        from eth_account._utils.signing import extract_chain_id
-        # Simplified check: just ensure the signature is not empty
-        return len(response.signature) == 132  # 66 bytes hex = 132 chars
-    except:
-        return False
+    # Basic length check – replace with full recovery if needed
+    return len(response.signature) == 132
