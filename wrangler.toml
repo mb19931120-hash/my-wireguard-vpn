@@ -1,8 +1,0 @@
-name = "my-wireguard-vpn"
-main = "worker.js"
-compatibility_date = "2024-01-25"
-
-[vars]
-UUID = "b9e8a0c7-a0f0-11ed-bdda-0242ac120002"
-
-# احذف قسم [build.upload] تماماً لأنه قديم ويسبب مشاكل في التنسيق الحديث
