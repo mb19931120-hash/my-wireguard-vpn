@@ -12,10 +12,7 @@ app = FastAPI(title="CAP AI Agent", description="Crypto Agent Protocol compatibl
 
 @app.post("/job", response_model=JobResponse)
 async def handle_job(job: JobRequest):
-    """
-    CAP‑compatible endpoint that receives a job, processes it after payment,
-    and returns a signed response.
-    """
+    """CAP‑compatible endpoint that processes a job after payment."""
     try:
         response = process_job(job)
         return response
@@ -25,7 +22,7 @@ async def handle_job(job: JobRequest):
 
 @app.get("/health")
 async def health_check():
-    """Simple health check for the agent."""
+    """Simple health check."""
     return {"status": "healthy", "cap_version": "1.0"}
 
 
